@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Faizan Ali - Full Stack Web Developer Portfolio Profile Card">
+  <title>Faizan Ali | Full Stack Web Developer</title>
+  <!-- Google Fonts for Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="icon" href="favicon.ico">
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* CSS variables defining light/dark modes */
+    :root {
+      /* Light Mode Variables (Default) */
+      --bg-gradient: linear-gradient(135deg, #eef2f6 0%, #d8e2ed 100%);
+      --blob-1-bg: rgba(99, 102, 241, 0.25);
+      --blob-2-bg: rgba(244, 63, 94, 0.2);
+      
+      --card-bg: rgba(255, 255, 255, 0.4);
+      --card-border: rgba(255, 255, 255, 0.5);
+      --card-shadow: 0 20px 40px rgba(15, 23, 42, 0.05),
+                     inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --accent-color: #4f46e5;
+      
+      --badge-bg: rgba(255, 255, 255, 0.5);
+      --badge-border: rgba(255, 255, 255, 0.6);
+      --badge-text: #4f46e5;
+      
+      --social-bg: rgba(255, 255, 255, 0.5);
+      --social-border: rgba(255, 255, 255, 0.6);
+      --social-text: #475569;
+      
+      --toggle-bg: rgba(255, 255, 255, 0.6);
+      --toggle-border: rgba(255, 255, 255, 0.7);
+      --toggle-color: #475569;
+      
+      --avatar-ring: linear-gradient(135deg, #6366f1, #f43f5e);
+      --status-color: #22c55e;
+    }
+
+    /* Checkbox Hack for Theme Switcher */
+    #theme-toggle:checked ~ .page-wrapper {
+      /* Dark Mode Variables */
+      --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
+      --blob-1-bg: rgba(99, 102, 241, 0.15);
+      --blob-2-bg: rgba(244, 63, 94, 0.12);
+      
+      --card-bg: rgba(17, 24, 39, 0.55);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-shadow: 0 25px 50px rgba(0, 0, 0, 0.35),
+                     inset 0 1px 0px rgba(255, 255, 255, 0.07);
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-color: #818cf8;
+      
+      --badge-bg: rgba(31, 41, 55, 0.4);
+      --badge-border: rgba(255, 255, 255, 0.05);
+      --badge-text: #a5b4fc;
+      
+      --social-bg: rgba(31, 41, 55, 0.4);
+      --social-border: rgba(255, 255, 255, 0.05);
+      --social-text: #94a3b8;
+      
+      --toggle-bg: rgba(31, 41, 55, 0.5);
+      --toggle-border: rgba(255, 255, 255, 0.05);
+      --toggle-color: #f59e0b;
+      
+      --avatar-ring: linear-gradient(135deg, #818cf8, #fb7185);
+      --status-color: #4ade80;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #0f172a;
+    }
+
+    /* Theme toggle input is hidden */
+    .theme-toggle-input {
+      display: none;
+    }
+
+    /* Main container wrapper */
+    .page-wrapper {
+      min-height: 100vh;
+      width: 100%;
+      background: var(--bg-gradient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.5s ease;
+    }
+
+    /* Animated background blobs for realistic glassmorphism */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 1;
+      animation: float 14s infinite alternate ease-in-out;
+    }
+
+    .blob-1 {
+      width: 320px;
+      height: 320px;
+      background: var(--blob-1-bg);
+      top: 15%;
+      left: 10%;
+    }
+
+    .blob-2 {
+      width: 380px;
+      height: 380px;
+      background: var(--blob-2-bg);
+      bottom: 10%;
+      right: 8%;
+      animation-delay: -7s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(30px, -50px) scale(1.1);
+      }
+      100% {
+        transform: translate(-30px, 30px) scale(0.95);
+      }
+    }
+
+    /* Card Styling */
+    .card {
+      width: 100%;
+      max-width: 500px;
+      min-width: 320px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      box-shadow: var(--card-shadow);
+      z-index: 10;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                  box-shadow 0.4s ease, 
+                  background-color 0.5s ease, 
+                  border-color 0.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--card-shadow), 0 30px 60px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-wrapper {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 20;
+    }
+
+    .theme-toggle-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                  background-color 0.4s, 
+                  border-color 0.4s;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.1) rotate(15deg);
+    }
+
+    .theme-toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .theme-toggle-btn svg {
+      position: absolute;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.4s ease, 
+                  color 0.4s ease;
+    }
+
+    /* Sun icon default hidden, Moon icon visible */
+    .theme-toggle-btn .sun-icon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+      color: var(--toggle-color);
+    }
+
+    .theme-toggle-btn .moon-icon {
+      opacity: 1;
+      transform: rotate(0) scale(1);
+      color: var(--toggle-color);
+    }
+
+    /* Checked state triggers */
+    #theme-toggle:checked ~ .page-wrapper .sun-icon {
+      opacity: 1;
+      transform: rotate(0) scale(1);
+    }
+
+    #theme-toggle:checked ~ .page-wrapper .moon-icon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+
+    /* Header styling */
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .avatar-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      padding: 4px;
+      background: var(--avatar-ring);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transition: transform 0.5s ease, background 0.5s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .avatar-wrapper:hover .avatar-ring {
+      transform: rotate(10deg) scale(1.04);
+    }
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      background-color: #fff;
+      display: block;
+      border: 3px solid var(--card-bg);
+      transition: border-color 0.5s ease;
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      background-color: var(--status-color);
+      border: 4px solid var(--card-bg);
+      border-radius: 50%;
+      transition: background-color 0.5s ease, border-color 0.5s ease;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      }
+    }
+
+    .name {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+      transition: color 0.5s ease;
+    }
+
+    .title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: color 0.5s ease;
+    }
+
+    /* Section (Body) styling */
+    .card-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .bio {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      transition: color 0.5s ease;
+    }
+
+    .badges-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.85rem;
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--badge-text);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      transition: background-color 0.5s ease;
+    }
+
+    /* Footer styling */
+    .card-footer {
+      width: 100%;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      transition: border-color 0.5s ease;
+    }
+
+    .social-link {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--social-bg);
+      border: 1px solid var(--social-border);
+      color: var(--social-text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Brand colored hovers for a professional touch */
+    .social-link.linkedin:hover {
+      background: #0077b5;
+      border-color: #0077b5;
+      color: #ffffff;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 20px rgba(0, 119, 181, 0.35);
+    }
+
+    .social-link.instagram:hover {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      border-color: transparent;
+      color: #ffffff;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 20px rgba(220, 39, 67, 0.35);
+    }
+
+    .social-link.facebook:hover {
+      background: #1877f2;
+      border-color: #1877f2;
+      color: #ffffff;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 20px rgba(24, 119, 242, 0.35);
+    }
+
+    .social-link:active {
+      transform: translateY(-2px) scale(0.95);
+    }
+
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.35s ease;
+    }
+
+    .social-link:hover svg {
+      transform: rotate(8deg);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .card {
+        padding: 2.5rem 1.5rem 2rem 1.5rem;
+        max-width: 350px;
+      }
+
+      .name {
+        font-size: 1.5rem;
+      }
+
+      .title {
+        font-size: 0.85rem;
+      }
+
+      .bio {
+        font-size: 0.88rem;
+        line-height: 1.5;
+      }
+
+      .badge {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.7rem;
+      }
+
+      .social-link {
+        width: 44px;
+        height: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden Checkbox for Dark/Light Mode toggle -->
+  <input type="checkbox" id="theme-toggle" class="theme-toggle-input">
+  <script>
+    // Immediately check preference to prevent flash of wrong theme
+    (function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        themeToggle.checked = true;
+      } else if (savedTheme === 'light') {
+        themeToggle.checked = false;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        themeToggle.checked = true;
+      }
+      
+      // Save theme selection on toggle
+      themeToggle.addEventListener('change', () => {
+        localStorage.setItem('theme', themeToggle.checked ? 'dark' : 'light');
+      });
+    })();
+  </script>
+
+  <div class="page-wrapper">
+    <!-- Background blur elements to showcase the glassmorphism -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Profile Card (Semantic HTML layout) -->
+    <article class="card">
+      
+      <!-- Theme Switcher located inside the card top-right -->
+      <div class="theme-toggle-wrapper">
+        <label for="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+          <!-- Sun Icon (Visible in Dark Mode) -->
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <!-- Moon Icon (Visible in Light Mode) -->
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </label>
+      </div>
+
+      <!-- Card Header containing Avatar, Name and Title -->
+      <header class="card-header">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring">
+            <img class="profile-img" src="profile.png" alt="Faizan Ali">
+          </div>
+          <!-- Pulse animation indicating actively open for work/freelance -->
+          <div class="status-badge" title="Active & Open for Opportunities"></div>
+        </div>
+        <h1 class="name">Faizan Ali</h1>
+        <p class="title">Full Stack Web Developer</p>
+      </header>
+
+      <!-- Card Body containing Bio and Category Badges -->
+      <section class="card-body">
+        <p class="bio">
+          I am a seasoned and professional Website Developer and Application Developer with great experience at CODEX IT Solutions Ltd. as well as, on freelancing aspects. I've developed various websites and applications based on different topics including healthcare, education, e-commerce, and many more.
+        </p>
+        <div class="badges-wrapper">
+          <span class="badge">
+            <span class="badge-dot"></span>Website Developer
+          </span>
+          <span class="badge">
+            <span class="badge-dot"></span>Application Developer
+          </span>
+          <span class="badge">
+            <span class="badge-dot"></span>Experienced Freelancer
+          </span>
+        </div>
+      </section>
+
+      <!-- Card Footer containing Social links -->
+      <footer class="card-footer">
+        <a class="social-link linkedin" href="https://www.linkedin.com/in/faizan-ali-26574237b" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+        <a class="social-link instagram" href="https://www.instagram.com/mr_faizi_k" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+        <a class="social-link facebook" href="https://www.facebook.com/share/1GgHgiwEA2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook Profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+          </svg>
+        </a>
+      </footer>
+
+    </article>
+  </div>
+
+</body>
+</html>
