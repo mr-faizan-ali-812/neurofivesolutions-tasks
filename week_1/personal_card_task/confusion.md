@@ -1,0 +1,3 @@
+## CSS Reflection
+
+Some CSS properties, especially `backdrop-filter`, `transform`, and `transition`, were initially a bit confusing because they affect both the appearance and animation of elements. I resolved this by referring to CSS documentation and experimenting with different values until I achieved the desired effect. Using browser developer tools also helped me understand how each property influenced the layout and design. This process improved my understanding of modern CSS styling and responsive design techniques.
