@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strata Studio — Next-Gen Modular Sound Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #090d16;
+    --panel-bg: #111827;
+    --panel-elevated: #1f2937;
+    --accent-indigo: #6366f1;
+    --accent-indigo-light: #818cf8;
+    --accent-emerald: #10b981;
+    --text-primary: #f3f4f6;
+    --text-dim: #9ca3af;
+    --border-line: #1f2937;
+    --border-line-hover: #374151;
+    --display-font: 'Plus Jakarta Sans', sans-serif;
+    --code-font: 'JetBrains Mono', monospace;
+    --body-font: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--body-font);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---------- NAVBAR ---------- */
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(9, 13, 22, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-line);
+  }
+  .site-header .container {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+  }
+  .brand-logo {
+    font-family: var(--display-font); font-weight: 800; font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 10px;
+    color: #fff;
+  }
+  .status-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent-emerald);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+    animation: statusPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+  .nav-menu { display: flex; gap: 32px; font-family: var(--code-font); font-size: 0.84rem; color: var(--text-dim); }
+  .nav-menu a { transition: color 0.2s ease; }
+  .nav-menu a:hover { color: var(--accent-indigo-light); }
+  .header-btn {
+    font-family: var(--code-font); font-size: 0.82rem; font-weight: 500;
+    padding: 9px 20px; border: 1px solid var(--accent-indigo); border-radius: 6px;
+    color: var(--accent-indigo-light);
+    background: rgba(99, 102, 241, 0.08);
+    transition: all 0.25s ease;
+  }
+  .header-btn:hover {
+    background: var(--accent-indigo); color: #fff;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  }
+
+  /* ---------- HERO SECTION ---------- */
+  .hero-block {
+    position: relative;
+    padding: 100px 0 85px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-line);
+  }
+  .hero-backdrop {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-line) 1px, transparent 1px);
+    background-size: 52px 52px;
+    opacity: 0.2;
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 15%, black 40%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 2; text-align: center; }
+  .badge-label {
+    font-family: var(--code-font); font-size: 0.78rem; color: var(--accent-emerald);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25); padding: 6px 16px; border-radius: 20px;
+    margin-bottom: 26px;
+    animation: slideUpFade 0.8s ease both;
+  }
+  h1.hero-title {
+    font-family: var(--display-font); font-weight: 800;
+    font-size: clamp(2.5rem, 5.8vw, 4.3rem);
+    line-height: 1.08; letter-spacing: -0.02em;
+    max-width: 860px; margin: 0 auto 22px;
+    animation: slideUpFade 0.8s ease 0.1s both;
+  }
+  h1.hero-title span {
+    background: linear-gradient(135deg, var(--accent-indigo-light), #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-description {
+    font-size: 1.12rem; color: var(--text-dim);
+    max-width: 600px; margin: 0 auto 38px;
+    animation: slideUpFade 0.8s ease 0.2s both;
+  }
+  @keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-cta-group {
+    display: flex; gap: 16px; justify-content: center; margin-bottom: 64px;
+    animation: slideUpFade 0.8s ease 0.3s both;
+  }
+  .cta-primary {
+    font-family: var(--code-font); font-size: 0.9rem; font-weight: 600;
+    background: var(--accent-indigo); color: #fff;
+    padding: 14px 28px; border-radius: 6px; border: 1px solid var(--accent-indigo);
+    transition: all 0.2s ease;
+  }
+  .cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(99, 102, 241, 0.4);
+    background: #4f46e5;
+  }
+  .cta-secondary {
+    font-family: var(--code-font); font-size: 0.9rem;
+    padding: 14px 28px; border-radius: 6px; border: 1px solid var(--border-line-hover);
+    color: var(--text-primary); background: rgba(31, 41, 55, 0.4);
+    transition: all 0.2s ease;
+  }
+  .cta-secondary:hover { border-color: var(--accent-indigo-light); color: var(--accent-indigo-light); }
+
+  /* ---------- SEQUENCER RACK UI ---------- */
+  .synth-rack {
+    position: relative; z-index: 2;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-line-hover);
+    border-radius: 12px;
+    max-width: 780px; margin: 0 auto;
+    padding: 30px 34px;
+    box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75);
+  }
+  .rack-header {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--code-font); font-size: 0.75rem; color: var(--text-dim);
+    margin-bottom: 22px; border-bottom: 1px solid var(--border-line); padding-bottom: 10px;
+  }
+  .step-grid {
+    display: grid; grid-template-columns: repeat(16, 1fr); gap: 8px; margin-bottom: 28px;
+  }
+  .step-box {
+    aspect-ratio: 1; border-radius: 4px;
+    background: var(--panel-elevated);
+    border: 1px solid var(--border-line);
+  }
+  .step-box.active {
+    background: var(--accent-indigo);
+    box-shadow: 0 0 14px rgba(99, 102, 241, 0.85);
+    animation: stepSequence 3.2s steps(16) infinite;
+  }
+  @keyframes stepSequence {
+    0%, 93.75%, 100% { background: var(--panel-elevated); box-shadow: none; }
+    3.125% { background: var(--accent-indigo-light); box-shadow: 0 0 14px rgba(129, 140, 248, 0.9); }
+  }
+  .control-dials { display: flex; justify-content: center; gap: 48px; }
+  .dial-control { text-align: center; }
+  .dial-knob {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #374151, var(--panel-elevated) 70%);
+    border: 1px solid var(--border-line-hover);
+    position: relative; margin: 0 auto 10px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+  .dial-knob::after {
+    content: ''; position: absolute; top: 5px; left: 50%;
+    width: 2px; height: 14px; background: var(--accent-emerald);
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px var(--accent-emerald);
+  }
+  .dial-control:hover .dial-knob { transform: rotate(180deg); box-shadow: 0 0 18px rgba(16, 185, 129, 0.45); }
+  .dial-caption { font-family: var(--code-font); font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.08em; }
+
+  /* ---------- SECTION BASE ---------- */
+  section { padding: 95px 0; }
+  .section-heading { text-align: center; max-width: 620px; margin: 0 auto 60px; }
+  .section-tag {
+    font-family: var(--code-font); font-size: 0.78rem; color: var(--accent-indigo-light);
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  h2.section-title {
+    font-family: var(--display-font); font-weight: 700;
+    font-size: clamp(1.8rem, 3.2vw, 2.3rem);
+    margin-bottom: 14px;
+  }
+  .section-heading p { color: var(--text-dim); font-size: 1rem; }
+
+  /* ---------- FEATURES GRID ---------- */
+  .modules-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .module-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-line);
+    border-radius: 10px;
+    padding: 34px 28px;
+    position: relative;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .module-card.revealed { opacity: 1; transform: translateY(0); }
+  .module-card:nth-child(2) { transition-delay: 0.12s; }
+  .module-card:nth-child(3) { transition-delay: 0.24s; }
+  .module-card:hover {
+    border-color: var(--accent-indigo-light);
+    box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6);
+    transform: translateY(-4px);
+  }
+  .module-card.revealed:hover { transform: translateY(-4px); }
+  .card-code {
+    font-family: var(--code-font); font-size: 0.74rem; color: var(--accent-indigo-light);
+    letter-spacing: 0.08em; margin-bottom: 16px; display: block;
+  }
+  .module-card h3 {
+    font-family: var(--display-font); font-size: 1.22rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .module-card p { color: var(--text-dim); font-size: 0.93rem; }
+  .port-jack {
+    position: absolute; top: 28px; right: 28px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--panel-elevated); border: 1px solid var(--border-line-hover);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .module-card:hover .port-jack {
+    background: var(--accent-emerald); box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+  }
+
+  /* ---------- WAVEFORM VISUALIZER ---------- */
+  .visual-bars {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 4px; height: 48px; margin: 0 auto; max-width: 300px;
+  }
+  .visual-bars span {
+    display: block; width: 3px; border-radius: 2px;
+    background: var(--border-line);
+    animation: barPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes barPulse {
+    0%, 100% { height: 8px; background: var(--border-line); }
+    50% { height: 40px; background: var(--accent-indigo-light); }
+  }
+
+  /* ---------- FOOTER & DESIGN REFLECTION ---------- */
+  .callout-section {
+    text-align: center;
+    background: var(--panel-bg);
+    border-top: 1px solid var(--border-line);
+    border-bottom: 1px solid var(--border-line);
+  }
+  .callout-section h2 { max-width: 540px; margin-left: auto; margin-right: auto; }
+  .callout-section .cta-primary { font-size: 0.95rem; padding: 16px 34px; }
+
+  footer { padding: 48px 0; }
+  footer .container {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--code-font); font-size: 0.78rem; color: var(--text-dim);
+  }
+
+  .design-rationale {
+    max-width: 1140px; margin: 0 auto 60px; padding: 0 32px;
+    font-size: 0.92rem; color: var(--text-dim); line-height: 1.7;
+    border-top: 1px solid var(--border-line); padding-top: 32px;
+  }
+  .design-rationale strong { color: var(--text-primary); }
+
+  @media (max-width: 760px) {
+    .nav-menu { display: none; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .step-grid { grid-template-columns: repeat(8, 1fr); }
+    .control-dials { flex-wrap: wrap; gap: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand-logo"><span class="status-dot"></span>STRATA STUDIO</div>
+    <nav class="nav-menu">
+      <a href="#features">Modules</a>
+      <a href="#cta">Capabilities</a>
+      <a href="#cta">Documentation</a>
+    </nav>
+    <a href="#cta" class="header-btn">Launch Studio →</a>
+  </div>
+</header>
+
+<section class="hero-block">
+  <div class="hero-backdrop"></div>
+  <div class="container hero-content">
+    <span class="badge-label">◆ Browser-Based Signal Engine</span>
+    <h1 class="hero-title">A modular synthesizer studio<br>that lives inside your <span>browser tab</span>.</h1>
+    <p class="hero-description">Strata Studio is a patch-cable audio engine built for signal flow enthusiasts. No plug-ins or audio drivers required — sequence audio, adjust filters, and export multi-track audio stems instantly.</p>
+    <div class="hero-cta-group">
+      <a href="#cta" class="cta-primary">Launch Web Synth — Free</a>
+      <a href="#features" class="cta-secondary">Explore Modules</a>
+    </div>
+
+    <div class="synth-rack">
+      <div class="rack-header">
+        <span>16-STEP SEQUENCER RACK</span>
+        <span>124 BPM // CLOCK OK</span>
+      </div>
+      <div class="step-grid" id="stepGrid"></div>
+      <div class="control-dials">
+        <div class="dial-control"><div class="dial-knob"></div><div class="dial-caption">FILTER</div></div>
+        <div class="dial-control"><div class="dial-knob"></div><div class="dial-caption">RESONANCE</div></div>
+        <div class="dial-control"><div class="dial-knob"></div><div class="dial-caption">ENV DECAY</div></div>
+        <div class="dial-control"><div class="dial-knob"></div><div class="dial-caption">OVERDRIVE</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-heading">
+      <div class="section-tag">Modular Architecture</div>
+      <h2 class="section-title">Three core modules. Unlimited soundscapes.</h2>
+      <p>Rack up components seamlessly in memory — patch connections, adjust knobs, and experience real-time feedback.</p>
+    </div>
+    <div class="modules-grid">
+      <div class="module-card">
+        <span class="port-jack"></span>
+        <span class="card-code">MOD-01 // DUAL OSCILLATOR</span>
+        <h3>Dual Analog Core</h3>
+        <p>Dual analog-modeled oscillators equipped with cross-FM synthesis, pulse-width modulation, and hard-sync capabilities.</p>
+      </div>
+      <div class="module-card">
+        <span class="port-jack"></span>
+        <span class="card-code">MOD-02 // STEP ENGINE</span>
+        <h3>16-Step Rhythm Matrix</h3>
+        <p>Per-step event probability, ratcheting, swing adjustments, and direct timeline automation drawing.</p>
+      </div>
+      <div class="module-card">
+        <span class="port-jack"></span>
+        <span class="card-code">MOD-03 // AUDIO MATRIX & EXPORT</span>
+        <h3>Stem Export & Live Link</h3>
+        <p>Export isolated stems directly or share a live session link to collaborate with peer musicians in real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="visual-bars" id="visualBars"></div>
+  </div>
+</section>
+
+<section id="cta" class="callout-section">
+  <div class="container">
+    <div class="section-tag">Instant Audio Access</div>
+    <h2 class="section-title">Your next audio patch is one click away.</h2>
+    <p style="color:var(--text-dim); margin-bottom:36px;">100% free for individual projects. Upgrade for multi-rack sessions and high-bitrate WAV exports.</p>
+    <a href="#" class="cta-primary">Launch Strata Studio</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span>© 2026 Strata Audio Studio</span>
+    <span>Engineered for signal flow creators</span>
+  </div>
+</footer>
+
+<div class="design-rationale">
+  <strong>Rationale on UI animation & feedback:</strong> Animations are selectively applied to reflect tactile audio hardware interaction — the step sequencer traveling status light and real-time waveform visualizer maintain motion because synthesizers express dynamic energy continuously. Hover feedback on knobs, cards, and interactive controls utilizes brisk physical transitions (rotations, elevation, glow highlights) to mirror a musician's manual adjustments, ensuring fast, tactile feedback without intrusive layout shifts. Scroll reveals stagger module entries sequentially to mimic hardware racks powering on, maintaining focus on the primary hero interface. Non-audio UI elements remain static to preserve clean readability and intentional design hierarchy.
+</div>
+
+<script>
+  // Populate 16-step sequencer lights dynamically
+  const stepGridEl = document.getElementById('stepGrid');
+  for (let idx = 0; idx < 16; idx++) {
+    const step = document.createElement('div');
+    step.className = 'step-box active';
+    step.style.animationDelay = (idx * 0.2) + 's';
+    stepGridEl.appendChild(step);
+  }
+
+  // Populate waveform visualizer bars
+  const visualBarsEl = document.getElementById('visualBars');
+  for (let idx = 0; idx < 24; idx++) {
+    const bar = document.createElement('span');
+    bar.style.animationDelay = (idx * 0.07) + 's';
+    visualBarsEl.appendChild(bar);
+  }
+
+  // Intersection Observer for feature cards stagger reveal
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.module-card').forEach(card => cardObserver.observe(card));
+</script>
+
+</body>
+</html>
