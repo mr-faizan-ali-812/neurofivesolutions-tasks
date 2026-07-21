@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow Studio — Personal Task Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-page: #0b0f19;
+    --card-surface: #161f30;
+    --input-surface: #1e293b;
+    --border-dim: #27354a;
+    --border-highlight: #38bdf8;
+    --text-heading: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-sky: #38bdf8;
+    --accent-mint: #34d399;
+    --accent-danger: #f87171;
+    --font-sans: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg-page);
+    color: var(--text-heading);
+    font-family: var(--font-sans);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 5vh 1.5rem;
+    line-height: 1.5;
+  }
+
+  main.app-container {
+    width: 100%;
+    max-width: 580px;
+    background: var(--card-surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 16px;
+    padding: 2.2rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  header.app-header {
+    margin-bottom: 1.8rem;
+    border-bottom: 1px solid var(--border-dim);
+    padding-bottom: 1.2rem;
+  }
+
+  h1.app-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+  }
+
+  .app-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent-sky);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  form#task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #task-input {
+    flex: 1;
+    min-width: 160px;
+    background: var(--input-surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.98rem;
+    padding: 0.65rem 0.9rem;
+    color: var(--text-heading);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #task-input:focus {
+    border-color: var(--border-highlight);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+  }
+
+  #task-input::placeholder { color: var(--text-muted); }
+
+  #due-input {
+    background: var(--input-surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 0.65rem 0.8rem;
+    color: var(--text-muted);
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  #due-input:focus {
+    border-color: var(--border-highlight);
+    color: var(--text-heading);
+  }
+
+  button { cursor: pointer; border: none; font-family: inherit; }
+
+  #task-form button {
+    background: var(--accent-sky);
+    color: #0b0f19;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0 1.25rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  #task-form button:hover {
+    background: #7dd3fc;
+    transform: translateY(-1px);
+  }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  #counter { color: var(--text-muted); }
+  #counter strong { color: var(--accent-sky); }
+
+  .filter-group {
+    display: flex;
+    gap: 0.3rem;
+    background: var(--input-surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn.selected {
+    background: var(--accent-sky);
+    color: #0b0f19;
+    font-weight: 600;
+  }
+
+  ul#task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  li.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    transition: border-color 0.2s ease, transform 0.15s ease;
+  }
+
+  li.task-item:hover {
+    border-color: #334155;
+    transform: translateX(2px);
+  }
+
+  .check-box {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--text-muted);
+    border-radius: 6px;
+    background: transparent;
+    flex-shrink: 0;
+    position: relative;
+    padding: 0;
+    transition: all 0.2s ease;
+  }
+
+  li.task-item.completed .check-box {
+    background: var(--accent-mint);
+    border-color: var(--accent-mint);
+  }
+
+  li.task-item.completed .check-box::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid #0b0f19;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .item-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .task-text {
+    font-size: 0.98rem;
+    color: var(--text-heading);
+    word-break: break-word;
+    transition: color 0.2s ease;
+  }
+
+  li.task-item.completed .task-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+
+  .due-badge {
+    font-family: var(--font-mono);
+    font-size: 0.73rem;
+    color: var(--accent-sky);
+    margin-top: 0.2rem;
+  }
+
+  .due-badge.overdue { color: var(--accent-danger); }
+  li.task-item.completed .due-badge { color: #64748b; }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.4rem;
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+  }
+
+  li.task-item:hover .action-buttons { opacity: 1; }
+
+  .edit-btn,
+  .delete-btn {
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .edit-btn:hover { color: var(--accent-sky); background: rgba(56, 189, 248, 0.1); }
+  .delete-btn:hover { color: var(--accent-danger); background: rgba(248, 113, 113, 0.1); }
+
+  li.task-item.editing-row {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .edit-input-text {
+    flex: 1;
+    min-width: 140px;
+    background: var(--input-surface);
+    border: 1px solid var(--border-highlight);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text-heading);
+    padding: 0.4rem 0.6rem;
+    outline: none;
+  }
+
+  .edit-input-date {
+    background: var(--input-surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-heading);
+    padding: 0.4rem 0.6rem;
+    outline: none;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .save-btn { background: var(--accent-sky); color: #0b0f19; font-weight: 600; }
+  .save-btn:hover { background: #7dd3fc; }
+  .cancel-btn { background: rgba(248, 113, 113, 0.15); color: var(--accent-danger); }
+  .cancel-btn:hover { background: rgba(248, 113, 113, 0.25); }
+
+  .empty-notice {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    border: 1px dashed var(--border-dim);
+    border-radius: 10px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<main class="app-container">
+  <header class="app-header">
+    <h1 class="app-title">TaskFlow Studio</h1>
+    <div class="app-subtitle">Structured Priorities // Real-Time Tracking</div>
+  </header>
+
+  <form id="task-form">
+    <input type="text" id="task-input" placeholder="Create a new task..." autocomplete="off">
+    <input type="date" id="due-input" aria-label="Target date (optional)">
+    <button type="submit">+ Add</button>
+  </form>
+
+  <div class="status-bar">
+    <span id="counter"></span>
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn selected" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </div>
+  </div>
+
+  <ul id="task-list"></ul>
+</main>
+
+<script>
+  // State Management
+  let taskItems = [
+    { id: 101, text: "Explore querySelector & DOM API", completed: true, dueDate: "" },
+    { id: 102, text: "Configure addEventListener handlers", completed: false, dueDate: "" },
+    { id: 103, text: "Build dynamic TaskFlow UI components", completed: false, dueDate: "" }
+  ];
+  let uniqueIdCounter = 104;
+  let activeFilterState = "all";
+  let currentlyEditingId = null;
+
+  // DOM Elements
+  const taskForm = document.querySelector("#task-form");
+  const taskTextInput = document.querySelector("#task-input");
+  const taskDateInput = document.querySelector("#due-input");
+  const taskListElement = document.querySelector("#task-list");
+  const taskCounterElement = document.querySelector("#counter");
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  // Filtering Logic
+  function getFilteredTasks() {
+    if (activeFilterState === "active") return taskItems.filter(item => !item.completed);
+    if (activeFilterState === "completed") return taskItems.filter(item => item.completed);
+    return taskItems;
+  }
+
+  // Main UI Renderer
+  function renderAppUI() {
+    while (taskListElement.firstChild) {
+      taskListElement.removeChild(taskListElement.firstChild);
+    }
+
+    const visibleItems = getFilteredTasks();
+
+    if (visibleItems.length === 0) {
+      const emptyItem = document.createElement("li");
+      emptyItem.className = "empty-notice";
+      emptyItem.textContent = taskItems.length === 0
+        ? "No tasks recorded yet. Add your first item above."
+        : "No tasks match the active filter.";
+      taskListElement.appendChild(emptyItem);
+    } else {
+      visibleItems.forEach(task => taskListElement.appendChild(createTaskRow(task)));
+    }
+
+    updateTaskCounter();
+    updateFilterButtons();
+  }
+
+  function formatDisplayDate(dateString) {
+    const [y, m, d] = dateString.split("-").map(Number);
+    const dateObj = new Date(y, m - 1, d);
+    return dateObj.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function checkOverdueStatus(task) {
+    if (!task.dueDate || task.completed) return false;
+    const [y, m, d] = task.dueDate.split("-").map(Number);
+    const dueDateObj = new Date(y, m - 1, d);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dueDateObj < today;
+  }
+
+  function createTaskRow(task) {
+    const itemLi = document.createElement("li");
+    itemLi.dataset.id = task.id;
+
+    if (task.id === currentlyEditingId) {
+      return createEditFormRow(task, itemLi);
+    }
+
+    itemLi.className = "task-item" + (task.completed ? " completed" : "");
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.className = "check-box";
+    toggleBtn.setAttribute("aria-label", "Toggle completion");
+    toggleBtn.addEventListener("click", () => toggleTaskCompletion(task.id));
+
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "item-content";
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "task-text";
+    textSpan.textContent = task.text;
+    contentDiv.appendChild(textSpan);
+
+    if (task.dueDate) {
+      const isPast = checkOverdueStatus(task);
+      const dueSpan = document.createElement("span");
+      dueSpan.className = "due-badge" + (isPast ? " overdue" : "");
+      dueSpan.textContent = (isPast ? "Overdue — " : "Due ") + formatDisplayDate(task.dueDate);
+      contentDiv.appendChild(dueSpan);
+    }
+
+    const actionDiv = document.createElement("div");
+    actionDiv.className = "action-buttons";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "edit-btn";
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => triggerEditMode(task.id));
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", () => removeTaskItem(task.id));
+
+    actionDiv.appendChild(editBtn);
+    actionDiv.appendChild(deleteBtn);
+
+    itemLi.appendChild(toggleBtn);
+    itemLi.appendChild(contentDiv);
+    itemLi.appendChild(actionDiv);
+    return itemLi;
+  }
+
+  function createEditFormRow(task, itemLi) {
+    itemLi.className = "task-item editing-row";
+
+    const editTextInput = document.createElement("input");
+    editTextInput.type = "text";
+    editTextInput.className = "edit-input-text";
+    editTextInput.value = task.text;
+
+    const editDateInput = document.createElement("input");
+    editDateInput.type = "date";
+    editDateInput.className = "edit-input-date";
+    editDateInput.value = task.dueDate || "";
+
+    const saveBtn = document.createElement("button");
+    saveBtn.className = "save-btn";
+    saveBtn.textContent = "Save";
+    saveBtn.addEventListener("click", () => applyTaskUpdate(task.id, editTextInput.value, editDateInput.value));
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = "cancel-btn";
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.addEventListener("click", () => cancelEditMode());
+
+    editTextInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") applyTaskUpdate(task.id, editTextInput.value, editDateInput.value);
+      if (e.key === "Escape") cancelEditMode();
+    });
+
+    itemLi.appendChild(editTextInput);
+    itemLi.appendChild(editDateInput);
+    itemLi.appendChild(saveBtn);
+    itemLi.appendChild(cancelBtn);
+    return itemLi;
+  }
+
+  function updateTaskCounter() {
+    const remainingCount = taskItems.filter(t => !t.completed).length;
+    taskCounterElement.textContent = "";
+    const countStrong = document.createElement("strong");
+    countStrong.textContent = String(remainingCount);
+    taskCounterElement.appendChild(countStrong);
+    taskCounterElement.appendChild(document.createTextNode(
+      remainingCount === 1 ? " task remaining" : " tasks remaining"
+    ));
+  }
+
+  function updateFilterButtons() {
+    filterButtons.forEach(btn => {
+      btn.classList.toggle("selected", btn.dataset.filter === activeFilterState);
+    });
+  }
+
+  // Task Mutations
+  function addNewTask(textValue, dateValue) {
+    taskItems.push({
+      id: uniqueIdCounter++,
+      text: textValue,
+      completed: false,
+      dueDate: dateValue || ""
+    });
+    renderAppUI();
+  }
+
+  function toggleTaskCompletion(taskId) {
+    const target = taskItems.find(item => item.id === taskId);
+    if (target) target.completed = !target.completed;
+    renderAppUI();
+  }
+
+  function removeTaskItem(taskId) {
+    taskItems = taskItems.filter(item => item.id !== taskId);
+    if (currentlyEditingId === taskId) currentlyEditingId = null;
+    renderAppUI();
+  }
+
+  function triggerEditMode(taskId) {
+    currentlyEditingId = taskId;
+    renderAppUI();
+  }
+
+  function cancelEditMode() {
+    currentlyEditingId = null;
+    renderAppUI();
+  }
+
+  function applyTaskUpdate(taskId, updatedText, updatedDate) {
+    const trimmedText = updatedText.trim();
+    if (!trimmedText) return;
+    const target = taskItems.find(item => item.id === taskId);
+    if (target) {
+      target.text = trimmedText;
+      target.dueDate = updatedDate || "";
+    }
+    currentlyEditingId = null;
+    renderAppUI();
+  }
+
+  // Event Handlers
+  taskForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const textVal = taskTextInput.value.trim();
+    if (!textVal) return;
+    addNewTask(textVal, taskDateInput.value);
+    taskTextInput.value = "";
+    taskDateInput.value = "";
+    taskTextInput.focus();
+  });
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeFilterState = btn.dataset.filter;
+      renderAppUI();
+    });
+  });
+
+  // Initial render
+  renderAppUI();
+</script>
+</body>
+</html>
